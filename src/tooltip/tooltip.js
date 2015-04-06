@@ -445,7 +445,7 @@ function ($animate ,  $sce ,  $compile ,  $templateRequest) {
 })
 
 .directive( 'tooltipTemplate', [ '$tooltip', function ( $tooltip ) {
-  return $tooltip( 'tooltipTemplate', 'tooltipTemplate', 'mouseenter' );
+  return $tooltip( 'tooltipTemplate', 'tooltip', 'mouseenter' );
 }])
 
 /*
