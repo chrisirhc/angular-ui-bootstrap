@@ -99,6 +99,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
         '<div '+ directiveName +'-popup '+
           'title="'+startSym+'title'+endSym+'" '+
           'content="'+startSym+'content'+endSym+'" '+
+          'content-exp="contentExp()" '+
           'placement="'+startSym+'placement'+endSym+'" '+
           'class="'+startSym+'class'+endSym+'" '+
           'animation="animation" '+
@@ -264,6 +265,10 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
               prepPlacement();
               prepPopupDelay();
             }
+
+            ttScope.contentExp = function () {
+              return scope.$eval(attrs[type]);
+            };
 
             /**
              * Observe the relevant attributes.
@@ -446,6 +451,19 @@ function ($animate ,  $sce ,  $compile ,  $templateRequest) {
 
 .directive( 'tooltipTemplate', [ '$tooltip', function ( $tooltip ) {
   return $tooltip( 'tooltipTemplate', 'tooltipTemplate', 'mouseenter' );
+}])
+
+.directive( 'tooltipHtmlPopup', function () {
+  return {
+    restrict: 'EA',
+    replace: true,
+    scope: { contentExp: '&', placement: '@', class: '@', animation: '&', isOpen: '&' },
+    templateUrl: 'template/tooltip/tooltip-html-popup.html'
+  };
+})
+
+.directive( 'tooltipHtml', [ '$tooltip', function ( $tooltip ) {
+  return $tooltip( 'tooltipHtml', 'tooltip', 'mouseenter' );
 }])
 
 /*
