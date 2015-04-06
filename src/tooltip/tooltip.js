@@ -478,6 +478,12 @@ Deprecated
   };
 })
 
-.directive( 'tooltipHtmlUnsafe', [ '$tooltip', function ( $tooltip ) {
+.value('tooltipHtmlUnsafeSuppressDeprecated', false)
+.directive( 'tooltipHtmlUnsafe', [
+          '$tooltip', 'tooltipHtmlUnsafeSuppressDeprecated', '$log',
+function ( $tooltip ,  tooltipHtmlUnsafeSuppressDeprecated ,  $log) {
+  if (!tooltipHtmlUnsafeSuppressDeprecated) {
+    $log.warn('tooltip-html-unsafe is now deprecated. Use tooltip-html or tooltip-template instead.');
+  }
   return $tooltip( 'tooltipHtmlUnsafe', 'tooltip', 'mouseenter' );
 }]);
