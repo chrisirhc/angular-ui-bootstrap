@@ -35,11 +35,14 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   angular.forEach(['minDate', 'maxDate'], function( key ) {
     if ( $attrs[key] ) {
       $scope.$parent.$watch($parse($attrs[key]), function(value) {
+        throwIfNotDate(value);
         self[key] = value ? new Date(value) : null;
         self.refreshView();
       });
     } else {
-      self[key] = datepickerConfig[key] ? new Date(datepickerConfig[key]) : null;
+      var configValue = datepickerConfig[key];
+      throwIfNotDate(configValue);
+      self[key] = configValue ? new Date(configValue) : null;
     }
   });
 
@@ -51,6 +54,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
     this.activeDate = $scope.$parent.$eval($attrs.initDate) || new Date();
     $scope.$parent.$watch($attrs.initDate, function(initDate){
       if(initDate && (ngModelCtrl.$isEmpty(ngModelCtrl.$modelValue) || ngModelCtrl.$invalid)){
+        throwIfNotDate(initDate);
         self.activeDate = initDate;
         self.refreshView();
       }
@@ -195,6 +199,12 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
       self.refreshView();
     }
   };
+
+  function throwIfNotDate(v, key) {
+    if (v && !angular.isDate(v)) {
+      throw new Error(key + ' must be a Date object');
+    }
+  }
 }])
 
 .directive( 'datepicker', function () {
@@ -550,6 +560,10 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
         if ( attrs[key] ) {
           var getAttribute = $parse(attrs[key]);
           scope.$parent.$watch(getAttribute, function(value){
+            if (['minDate', 'maxDate', 'initDate'].indexOf(key) !== -1 &&
+                !angular.isDate(value)) {
+              throw new Error(key + ' must be a Date object');
+            }
             scope.watchData[key] = value;
           });
           datepickerEl.attr(cameltoDash(key), 'watchData.' + key);
