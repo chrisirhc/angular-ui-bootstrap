@@ -549,20 +549,21 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
       angular.forEach(['minDate', 'maxDate', 'datepickerMode', 'initDate', 'shortcutPropagation'], function( key ) {
         if ( attrs[key] ) {
           var getAttribute = $parse(attrs[key]);
-          scope.$parent.$watch(getAttribute, function(value){
-            scope.watchData[key] = value;
-          });
+          var propConfig = {
+            get: function () {
+              return getAttribute(scope.$parent);
+            }
+          };
           datepickerEl.attr(cameltoDash(key), 'watchData.' + key);
 
           // Propagate changes from datepicker to outside
           if ( key === 'datepickerMode' ) {
             var setAttribute = getAttribute.assign;
-            scope.$watch('watchData.' + key, function(value, oldvalue) {
-              if ( angular.isFunction(setAttribute) && value !== oldvalue ) {
-                setAttribute(scope.$parent, value);
-              }
-            });
+            propConfig.set = function (v) {
+              setAttribute(scope.$parent, v);
+            };
           }
+          Object.defineProperty(scope.watchData, key, propConfig);
         }
       });
       if (attrs.dateDisabled) {
