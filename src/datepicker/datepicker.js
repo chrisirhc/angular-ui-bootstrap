@@ -105,7 +105,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
       date: date,
       label: dateFilter(date, format),
       selected: model && this.compare(date, model) === 0,
-      disabled: this.isDisabled(date),
+      disabled: this.isDisabled(date) || false,
       current: this.compare(date, new Date()) === 0,
       customClass: this.customClass(date) || null
     };
