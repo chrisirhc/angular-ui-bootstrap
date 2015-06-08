@@ -10,7 +10,10 @@
     <tr ng-repeat="row in rows track by $index">
       <td ng-repeat="dt in row" class="text-center" role="gridcell" id="{{::dt.uid}}">
         <button type="button" style="width:100%;" class="btn btn-default"
-          ng-class="{'btn-info': dt.selected, active: isActive(dt)}"
+          datepicker-is-class="
+            'btn-info' for selectedDt,
+            'active' for activeDt
+            on dt"
           ng-click="select(dt.date)"
           ng-disabled="::dt.disabled"
           tabindex="-1"><span

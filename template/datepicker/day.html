@@ -17,7 +17,10 @@
         id="{{::dt.uid}}"
         ng-class="::dt.customClass">
         <button type="button" style="width:100%;" class="btn btn-default btn-sm"
-          ng-class="{'btn-info': dt.selected, active: isActive(dt)}"
+          datepicker-is-class="
+            'btn-info' for selectedDt,
+            'active' for activeDt
+            on dt"
           ng-click="select(dt.date)"
           ng-disabled="::dt.disabled"
           tabindex="-1"><span
